@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>寫作佳句資料庫</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;background:#fdf9f0}
+body{font-family:'Noto Sans TC',sans-serif}
+
+
+/* ── 分頁標籤 ── */
+.tabs{
+  display:flex;background:#fff;
+  border-bottom:2px solid #f0e8ff;
+}
+.tab{
+  flex:1;padding:13px 0;font-size:14px;font-weight:500;
+  font-family:'Noto Sans TC',sans-serif;
+  background:none;border:none;cursor:pointer;
+  color:#aaa;letter-spacing:1px;
+  border-bottom:3px solid transparent;
+  margin-bottom:-2px;transition:all .2s;
+}
+.tab.active{color:#6c3fc5;border-bottom-color:#6c3fc5}
+.tab:hover:not(.active){color:#9575cd;background:#faf6ff}
+
+/* ── 頂部橫幅 ── */
+.hero{
+  background:#6c3fc5;
+  padding:28px 20px 22px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    45deg,
+    rgba(255,255,255,.03) 0px,
+    rgba(255,255,255,.03) 2px,
+    transparent 2px,
+    transparent 18px
+  );
+}
+.hero h1{
+  font-family:'Noto Serif TC',serif;
+  font-size:26px;font-weight:900;
+  color:#fff;letter-spacing:3px;
+  position:relative;z-index:1;
+}
+.hero p{
+  font-size:12px;color:rgba(255,255,255,.65);
+  margin-top:6px;letter-spacing:1px;
+  position:relative;z-index:1;
+}
+
+/* ── 統計小條 ── */
+.statsbar{
+  background:#fff;
+  border-bottom:2px solid #f0e8ff;
+  padding:10px 20px;
+  display:flex;gap:20px;
+  font-size:12px;color:#888;
+  justify-content:center;
+}
+.statsbar b{color:#6c3fc5;font-size:17px;font-weight:700;margin-right:2px}
+
+/* ── 搜尋列 ── */
+.searchbar{
+  padding:14px 16px 8px;
+  max-width:640px;margin:0 auto;
+}
+.searchbar input{
+  width:100%;padding:9px 14px;
+  border:1.5px solid #e0d5f5;border-radius:24px;
+  font-size:13px;font-family:'Noto Sans TC',sans-serif;
+  outline:none;background:#fff;color:#333;
+  transition:border-color .2s;
+}
+.searchbar input:focus{border-color:#6c3fc5}
+
+/* ── 卡片格 ── */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:16px;
+  padding:12px 16px 32px;
+  max-width:1100px;margin:0 auto;
+}
+
+/* ── 卡片本體 ── */
+.card{
+  border-radius:18px;
+  padding:20px 18px 16px;
+  position:relative;overflow:hidden;
+  animation:pop .4s cubic-bezier(.34,1.56,.64,1) both;
+  cursor:default;
+  transition:transform .18s;
+}
+.card:hover{transform:translateY(-3px)}
+@keyframes pop{
+  from{opacity:0;transform:scale(.9) translateY(10px)}
+  to{opacity:1;transform:none}
+}
+
+/* 6 種配色循環 */
+.c0{background:#fffbe6;border:1.5px solid #f5d800}
+.c1{background:#f3f0ff;border:1.5px solid #b39ddb}
+.c2{background:#fff0f6;border:1.5px solid #ffb3d0}
+.c3{background:#edfff4;border:1.5px solid #5ee8a0}
+.c4{background:#edf8ff;border:1.5px solid #80d8f7}
+.c5{background:#fff4ee;border:1.5px solid #ffab85}
+
+/* 大引號裝飾 */
+.deco{
+  position:absolute;right:10px;top:4px;
+  font-family:'Noto Serif TC',serif;
+  font-size:72px;line-height:1;
+  opacity:.08;color:#000;
+  pointer-events:none;user-select:none;
+}
+
+/* 佳句本文 */
+.quote{
+  font-family:'Noto Serif TC',serif;
+  font-size:15px;line-height:1.95;
+  color:#1a1a1a;
+  margin-bottom:12px;
+  min-height:48px;
+}
+
+/* 底部 */
+.foot{
+  display:flex;justify-content:space-between;align-items:center;
+  border-top:1px dashed rgba(0,0,0,.1);
+  padding-top:9px;
+  font-size:11px;color:#aaa;
+}
+.card-name{font-weight:500;color:#555;font-size:12px}
+.time-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:#ccc;margin-right:4px;flex-shrink:0;
+}
+.c0 .time-dot{background:#f5d800}
+.c1 .time-dot{background:#9575cd}
+.c2 .time-dot{background:#ff80ae}
+.c3 .time-dot{background:#3dd68c}
+.c4 .time-dot{background:#5ac8f5}
+.c5 .time-dot{background:#ff8a50}
+
+/* loading / empty */
+.msg{text-align:center;padding:60px 20px;color:#bbb;font-size:14px}
+.spinner{
+  width:30px;height:30px;
+  border:2px solid #ede7ff;border-top-color:#6c3fc5;
+  border-radius:50%;animation:spin 1s linear infinite;
+  margin:0 auto 14px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* 底部裝飾文字 */
+.footer{text-align:center;font-size:11px;color:#ccc;padding:16px;letter-spacing:1px}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>寫作佳句資料庫</h1>
+  <p>同學投稿 · 一起欣賞好詞好句</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('wall')">✨ 佳句牆</button>
+  <button class="tab" onclick="switchTab('form')">✏️ 我要投稿</button>
+</div>
+
+<div id="tab-form" style="display:none">
+  <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScwRFs6CV4qelAa5Wwl6DH7--N8i2uV7trpxQqm_YndkkIyEA/viewform?embedded=true"
+    width="100%" height="820" frameborder="0" marginheight="0" marginwidth="0"
+    style="display:block">載入中…</iframe>
+</div>
+
+<div id="tab-wall">
+
+<div class="statsbar">
+  <span><b id="totalN">—</b>篇佳句</span>
+  
+</div>
+
+<div class="searchbar">
+  <input type="text" id="search" placeholder="🔍 搜尋佳句關鍵字…" oninput="renderCards()">
+</div>
+
+<div id="content">
+  <div class="msg"><div class="spinner"></div>讀取佳句中…</div>
+</div>
+
+</div>
+<div class="footer">寫作佳句資料庫 · 每次投稿立即更新</div>
+
+<script>
+var CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRdi4UcSPAQp9Q_DRYGST3tk905ARwihqrlnMlssukztJWZPVrG3zfnI4MRu49h42sEjlVvWHLMiKQd/pub?gid=1571088456&single=true&output=csv';
+
+var allQuotes = [];
+var COLS = ['c0','c1','c2','c3','c4','c5'];
+
+function esc(s){
+  return String(s||'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtTime(s){
+  if(!s)return '';
+  var d=new Date(s);
+  if(isNaN(d))return s;
+  return (d.getMonth()+1)+'/'+(d.getDate());
+}
+
+function parseCSV(text){
+  var lines=text.trim().split('\n');
+  if(lines.length<2)return[];
+  return lines.slice(1).reverse().map(function(line){
+    var cols=[],cur='',inQ=false;
+    for(var i=0;i<line.length;i++){
+      var c=line[i];
+      if(c==='"'){inQ=!inQ}
+      else if(c===','&&!inQ){cols.push(cur.trim());cur=''}
+      else{cur+=c}
+    }
+    cols.push(cur.trim());
+    return{time:cols[0]||'',quote:cols[2]||'',name:cols[3]||''};
+  }).filter(function(q){return q.quote.trim()});
+}
+
+function renderCards(){
+  var kw=(document.getElementById('search').value||'').trim().toLowerCase();
+  var list=kw
+    ? allQuotes.filter(function(q){return q.quote.toLowerCase().includes(kw)})
+    : allQuotes;
+
+  var content=document.getElementById('content');
+  if(list.length===0){
+    content.innerHTML='<div class="msg">找不到符合的佳句 🙁</div>';
+    return;
+  }
+  var grid=document.createElement('div');
+  grid.className='grid';
+  list.forEach(function(q,i){
+    var ci=i%COLS.length;
+    var card=document.createElement('div');
+    card.className='card '+COLS[ci];
+    card.style.animationDelay=Math.min(i*0.045,0.5)+'s';
+    var nameHtml=q.name?'<span class="card-name">\u270f\ufe0f '+esc(q.name)+'</span>':'<span></span>';
+    card.innerHTML=
+      '<div class="deco">\u201C</div>'+
+      '<p class="quote">'+esc(q.quote)+'</p>'+
+      '<div class="foot">'+
+        nameHtml+
+        '<span style="display:flex;align-items:center;gap:4px"><span class="time-dot"></span>'+fmtTime(q.time)+'</span>'+
+      '</div>';
+    grid.appendChild(card);
+  });
+  content.innerHTML='';
+  content.appendChild(grid);
+}
+
+function updateStats(){
+  document.getElementById('totalN').textContent=allQuotes.length;
+}
+
+function switchTab(t){
+  document.getElementById('tab-wall').style.display = t==='wall'?'':'none';
+  document.getElementById('tab-form').style.display = t==='form'?'':'none';
+  document.querySelectorAll('.tab').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelector('.tab[onclick*="'+t+'"]').classList.add('active');
+}
+
+fetch('https://corsproxy.io/?' + encodeURIComponent(CSV_URL))
+  .then(function(r){return r.text()})
+  .then(function(text){
+    allQuotes=parseCSV(text);
+    updateStats();
+    renderCards();
+  })
+  .catch(function(e){
+    document.getElementById('content').innerHTML=
+      '<div class="msg">讀取失敗，請確認試算表已發布為公開 CSV。<br><small>'+e+'</small></div>';
+  });
+</script>
+</body>
+</html>
